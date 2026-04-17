@@ -4,6 +4,7 @@ import pyperclip
 import time
 import re
 import sys
+import random
 
 safety_limit = 40  # Max number of roll attempts before exiting
 
@@ -54,7 +55,8 @@ def start():
             print(f"Attempt {str(attempts + 1).rjust(attempt_width)}: Regex: {user_regex} Item Name: {item_name}")
             pyautogui.click()
             attempts += 1
-            time.sleep(0.1)
+            # Add random interval sanity for macro checks
+            time.sleep(random.uniform(0.07, 0.12))
 
         print(f"Reached safety limit of {safety_limit} attempts. Exiting.")
         running = False
