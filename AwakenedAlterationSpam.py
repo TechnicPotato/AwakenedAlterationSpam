@@ -6,16 +6,18 @@ import re
 import sys
 import random
 
-safety_limit = 40  # Max number of roll attempts before exiting
+SAFETY_LIMIT = 40  # Max number of roll attempts before exiting
 
 running = False
 user_regex = ""
 
+# Need this to output the number of lines obtained from an alteration orb in order to determine if an aug needs to be used.
 def extract_item_name(text):
     lines = text.splitlines()
     capture = False
     extracted = []
-
+    # Check number of lines scanned here and output as a seperate line
+    linecount = count(lines)
     for line in lines:
         if line.startswith("Rarity:"):
             capture = True
@@ -25,7 +27,7 @@ def extract_item_name(text):
         if capture:
             extracted.append(line)
 
-    return "\n".join(extracted)
+    return "\n".join(extracted), linecount
 
 def start():
     global running, user_regex
@@ -34,9 +36,10 @@ def start():
         print("Program started.")
 
         attempts = 0
-        attempt_width = len(str(safety_limit))  # Align width based on safety_limit
-
-        while attempts < safety_limit:
+        attempt_width = len(str(SAFETY_LIMIT))  # Align width based on safety_limit
+        # Py Auto GUI can be used here to hold the shift key
+        # Keydown.
+        while attempts < SAFETY_LIMIT:
             pyautogui.hotkey('ctrl', 'c')
             time.sleep(0.05)
             raw_text = pyperclip.paste()
@@ -51,6 +54,8 @@ def start():
                 keyboard.unhook_all_hotkeys()
                 sys.exit(0)
 
+            # Check if Augmentation can be used
+            
             # Print formatted attempt log
             print(f"Attempt {str(attempts + 1).rjust(attempt_width)}: Regex: {user_regex} Item Name: {item_name}")
             pyautogui.click()
